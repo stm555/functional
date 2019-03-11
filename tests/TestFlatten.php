@@ -2,6 +2,7 @@
 
 namespace stm555\functional\Test;
 
+use ArrayIterator;
 use PHPUnit\Framework\TestCase;
 use function stm555\functional\Functions\flatten;
 
@@ -19,7 +20,7 @@ class TestFlatten extends TestCase
             ],
             [9, 10, 11, 12]
         ];
-        foreach (flatten($exampleSet) as $element) {
+        foreach (flatten(new ArrayIterator($exampleSet)) as $element) {
             $this->assertIsNotArray($element);
         }
     }
@@ -48,7 +49,7 @@ class TestFlatten extends TestCase
      */
     public function testFlattenGeneratesExpectedResult(array $givenSet, array $flattenedSet)
     {
-        $this->assertEquals($flattenedSet, flatten($givenSet));
+        $this->assertEquals(new ArrayIterator($flattenedSet), flatten(new ArrayIterator($givenSet)));
     }
 
 }

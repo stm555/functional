@@ -2,6 +2,7 @@
 
 namespace stm555\functional\Test;
 
+use ArrayIterator;
 use PHPUnit\Framework\TestCase;
 use function stm555\functional\Functions\filter;
 
@@ -23,7 +24,7 @@ class TestFilter extends TestCase
      */
     public function testFilterSuccess(array $set, callable $filterFunction, array $expectedResult)
     {
-        $this->assertEquals($expectedResult, filter($filterFunction, $set));
+        $this->assertEquals(new ArrayIterator($expectedResult), filter($filterFunction, new ArrayIterator($set)));
     }
 
     /**
@@ -33,6 +34,6 @@ class TestFilter extends TestCase
      */
     public function testFilterBehavesTheSameAsArray_Filter(array $set, callable $filterFunction)
     {
-        $this->assertEquals(array_filter($set, $filterFunction), filter($filterFunction, $set));
+        $this->assertEquals(new ArrayIterator(array_filter($set, $filterFunction)), filter($filterFunction, new ArrayIterator($set)));
     }
 }

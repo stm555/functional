@@ -3,6 +3,7 @@
 namespace stm555\functional\Test;
 
 
+use ArrayIterator;
 use ErrorException;
 use PHPUnit\Framework\TestCase;
 use function stm555\functional\Functions\reduce;
@@ -33,7 +34,7 @@ class TestReduce extends TestCase
      */
     public function testReduceSuccess(array $set, callable $combineFunction, $expectedResult)
     {
-        $this->assertEquals($expectedResult, reduce($combineFunction, $set));
+        $this->assertEquals($expectedResult, reduce($combineFunction, new ArrayIterator($set)));
     }
 
     /**
@@ -47,7 +48,7 @@ class TestReduce extends TestCase
      */
     public function testReduceBehavesTheSameAsArray_Reduce(array $set, callable $combineFunction)
     {
-        $this->assertEquals(array_reduce($set, $combineFunction), reduce($combineFunction, $set));
+        $this->assertEquals(array_reduce($set, $combineFunction), reduce($combineFunction, new ArrayIterator($set)));
     }
 
     /**
@@ -57,7 +58,7 @@ class TestReduce extends TestCase
     {
         $this->expectExceptionObject(new ErrorException(ERROR_EXCEPTION_MESSAGE_REDUCE_EMPTY_SET));
         reduce(function () {/**/
-        }, []);
+        }, new ArrayIterator([]));
     }
 
 }

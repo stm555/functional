@@ -2,6 +2,7 @@
 
 namespace stm555\functional\Test;
 
+use ArrayIterator;
 use PHPUnit\Framework\TestCase;
 use function stm555\functional\Functions\map;
 
@@ -27,7 +28,7 @@ class TestMap extends TestCase
      */
     public function testMapSuccess(array $set, callable $transformFunction, array $expectedSet)
     {
-        $this->assertEquals($expectedSet, map($transformFunction, $set));
+        $this->assertEquals(new ArrayIterator($expectedSet), map($transformFunction, new ArrayIterator($set)));
     }
 
     /**
@@ -37,6 +38,6 @@ class TestMap extends TestCase
      */
     public function testMapBehavesTheSameAsArray_Map(array $set, callable $transformFunction)
     {
-        $this->assertEquals(array_map($transformFunction, $set), map($transformFunction, $set));
+        $this->assertEquals(new ArrayIterator(array_map($transformFunction, $set)), map($transformFunction, new ArrayIterator($set)));
     }
 }

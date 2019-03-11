@@ -2,6 +2,7 @@
 
 namespace stm555\functional\Test;
 
+use ArrayIterator;
 use PHPUnit\Framework\TestCase;
 use function stm555\functional\Functions\curry;
 use function stm555\functional\Functions\reduce;
@@ -51,7 +52,7 @@ class TestCurry extends TestCase
         $function = function (int ...$numbers): int {
             return reduce(function (int $integer1, int $integer2): int {
                 return $integer1 + $integer2;
-            }, $numbers);
+            }, new ArrayIterator($numbers));
         };
         $curriedFunction = curry($function);
         $addOneTwoThree = $curriedFunction(1, 2, 3);
