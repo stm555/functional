@@ -1,0 +1,28 @@
+{
+  "name": "stm555/functional",
+  "description": "Some functions",
+  "minimum-stability": "dev",
+  "license": "mit",
+  "authors": [
+    {
+      "name": "Seth Thornberry",
+      "email": "stm555@hotmail.com"
+    }
+  ],
+  "require": {
+    "phpunit/phpunit": "7.5.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "stm555\\functional\\": "src/"
+    },
+    "files": [
+      "src/Functions.php"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "stm555\\functional\\Test\\": "tests/"
+    }
+  }
+}
