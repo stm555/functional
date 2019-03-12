@@ -1,6 +1,6 @@
 <?php
 
-namespace stm555\functional\Test;
+namespace stm555\functional\Test\Functions;
 
 
 use ArrayIterator;
