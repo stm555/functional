@@ -3,6 +3,7 @@
 namespace stm555\functional\Test\Functions;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionException;
 use function stm555\functional\Functions\compose;
 use function stm555\functional\Functions\curry;
 use function stm555\functional\Functions\pipe;
@@ -50,6 +51,7 @@ class TestPipeAndCompose extends TestCase
      * @param $expectedResult
      * @param $initialValue
      * @param callable ...$functions
+     * @throws ReflectionException
      */
     public function testPipeProcessesFunctionsLeftToRight($expectedResult, $initialValue, callable ...$functions)
     {

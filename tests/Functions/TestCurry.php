@@ -52,7 +52,7 @@ class TestCurry extends TestCase
         $function = function (int ...$numbers): int {
             return reduce(function (int $integer1, int $integer2): int {
                 return $integer1 + $integer2;
-            }, new ArrayIterator($numbers));
+            }, new ArrayIterator($numbers), 0);
         };
         $curriedFunction = curry($function);
         $addOneTwoThree = $curriedFunction(1, 2, 3);

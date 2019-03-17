@@ -49,7 +49,7 @@ class TestFlatten extends TestCase
      */
     public function testFlattenGeneratesExpectedResult(array $givenSet, array $flattenedSet)
     {
-        $this->assertEquals(new ArrayIterator($flattenedSet), flatten(new ArrayIterator($givenSet)));
+        $this->assertEquals($flattenedSet, iterator_to_array(flatten(new ArrayIterator($givenSet))));
     }
 
 }

@@ -28,7 +28,7 @@ class TestMap extends TestCase
      */
     public function testMapSuccess(array $set, callable $transformFunction, array $expectedSet)
     {
-        $this->assertEquals(new ArrayIterator($expectedSet), map($transformFunction, new ArrayIterator($set)));
+        $this->assertEquals($expectedSet, iterator_to_array(map($transformFunction, new ArrayIterator($set))));
     }
 
     /**
@@ -38,6 +38,6 @@ class TestMap extends TestCase
      */
     public function testMapBehavesTheSameAsArray_Map(array $set, callable $transformFunction)
     {
-        $this->assertEquals(new ArrayIterator(array_map($transformFunction, $set)), map($transformFunction, new ArrayIterator($set)));
+        $this->assertEquals(array_map($transformFunction, $set), iterator_to_array(map($transformFunction, new ArrayIterator($set))));
     }
 }

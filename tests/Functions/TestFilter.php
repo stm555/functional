@@ -24,7 +24,7 @@ class TestFilter extends TestCase
      */
     public function testFilterSuccess(array $set, callable $filterFunction, array $expectedResult)
     {
-        $this->assertEquals(new ArrayIterator($expectedResult), filter($filterFunction, new ArrayIterator($set)));
+        $this->assertEquals($expectedResult, iterator_to_array(filter($filterFunction, new ArrayIterator($set))));
     }
 
     /**
@@ -34,6 +34,6 @@ class TestFilter extends TestCase
      */
     public function testFilterBehavesTheSameAsArray_Filter(array $set, callable $filterFunction)
     {
-        $this->assertEquals(new ArrayIterator(array_filter($set, $filterFunction)), filter($filterFunction, new ArrayIterator($set)));
+        $this->assertEquals(array_filter($set, $filterFunction), iterator_to_array(filter($filterFunction, new ArrayIterator($set))));
     }
 }

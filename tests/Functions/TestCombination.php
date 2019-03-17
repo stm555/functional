@@ -3,7 +3,6 @@
 namespace stm555\functional\Test\Functions;
 
 use ArrayIterator;
-use ErrorException;
 use PHPUnit\Framework\TestCase;
 use function stm555\functional\Functions\{compose, curry, filter, map, memoize, pipe, reduce};
 
@@ -23,14 +22,11 @@ class TestCombination extends TestCase
     {
         $set = new ArrayIterator([1234, '4567', 'foo']);
         $this->assertEquals(
-            new ArrayIterator(['1234', '4567', 'foo']),
-            filter('is_string', map('strval', $set))
+            ['1234', '4567', 'foo'],
+            iterator_to_array(filter('is_string', map('strval', $set)))
         );
     }
 
-    /**
-     * @throws ErrorException
-     */
     public function testMapIntoFilterIntoReduce()
     {
         $set = new ArrayIterator(['1', 'one', 1, true]);
@@ -40,9 +36,6 @@ class TestCombination extends TestCase
         );
     }
 
-    /**
-     * @throws ErrorException
-     */
     public function testFilterIntoMapIntoReduce()
     {
         $set = new ArrayIterator(['1', 'one', 1, true]);
@@ -67,28 +60,34 @@ class TestCombination extends TestCase
         );
     }
 
-    /**
-     * @throws ErrorException
-     */
     public function testMemoizedFilterIntoMemoizedMapIntoMemoizedReduce()
     {
-        $set = new ArrayIterator(['1', 'one', 1, true]);
+        $set = new ArrayIterator(['2', 'two', 2, true]);
         $memoizedAddFunction = memoize($this->addFunction);
         $memoizedIntValFunction = memoize('intval');
         $memoizedIsIntFunction = memoize('is_int');
-        //only a single one value is an int
+        //only a single value is an actual int
         $this->assertEquals(
-            1,
-            reduce($memoizedAddFunction, map($memoizedIntValFunction, filter($memoizedIsIntFunction, $set)))
+            2,
+            reduce(
+                $memoizedAddFunction,
+                map(
+                    $memoizedIntValFunction,
+                    filter(
+                        $memoizedIsIntFunction,
+                        $set
+                    )
+                )
+            )
         );
     }
 
     public function testPipedMemoizedFilterIntoMemoizedMapIntoMemoizedReduce()
     {
-        $set = new ArrayIterator(['1', 'one', 1, true]);
+        $set = new ArrayIterator(['2', 'two', 2, true]);
         //only a single one value is an int
         $this->assertEquals(
-            1,
+            2,
             pipe(
                 $set,
                 curry('\stm555\functional\Functions\filter')(memoize('is_int')),
@@ -98,5 +97,4 @@ class TestCombination extends TestCase
             )
         );
     }
-
 }
