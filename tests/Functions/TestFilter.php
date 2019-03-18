@@ -8,7 +8,7 @@ use function stm555\functional\Functions\filter;
 
 class TestFilter extends TestCase
 {
-    public function provideFilterExamples()
+    static public function provideFilterExamples()
     {
         return [
             'Simple String Filter' => [['1234', 1234, 'foo'], 'is_string', [0 => '1234', 2 => 'foo']],

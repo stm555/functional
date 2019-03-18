@@ -5,6 +5,7 @@ namespace stm555\functional;
 
 use IteratorAggregate;
 use Traversable;
+use function stm555\functional\Functions\reduce;
 
 /**
  * @todo add option to not preserve keys if the caller would like the set re-numbered
@@ -44,9 +45,9 @@ class Set implements IteratorAggregate
      * @todo implement reduce
      *
      */
-    public function reduce(callable $reduceFunction)
+    public function reduce(callable $reduceFunction, $initialValue = null)
     {
-        return;
+        return reduce($reduceFunction, $this, $initialValue);
     }
 
     /**

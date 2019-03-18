@@ -6,6 +6,7 @@ namespace stm555\functional\Test\Functions;
 use ArrayIterator;
 use ErrorException;
 use PHPUnit\Framework\TestCase;
+use function stm555\functional\Functions\flatten;
 use function stm555\functional\Functions\foldLeft;
 use function stm555\functional\Functions\reduce;
 
@@ -14,13 +15,21 @@ use function stm555\functional\Functions\reduce;
  */
 class TestReduceAndFoldLeft extends TestCase
 {
-    public function provideReduceExamples(): array
+    static public function provideReduceExamples(): array
     {
-        $sumFunction = function (int $integer1 = null, int $integer2 = null): int {
+        $sumFunction = function (int $integer1, int $integer2): int {
             return $integer1 + $integer2;
         };
         $concatFunction = function (string $string1, string $string2): string {
             return trim($string1 . ", " . $string2, ', ');
+        };
+
+        $productFunction = function (int $integer1, int $integer2): int {
+            return $integer1 * $integer2;
+        };
+
+        $setFunction = function (array $set1, array $set2) use ($sumFunction): array {
+            return iterator_to_array(flatten(new ArrayIterator([$set1, $set2])));
         };
 
         return [
@@ -30,7 +39,13 @@ class TestReduceAndFoldLeft extends TestCase
             'Sum Function With Many Elements' => [[1, 2, 3, 4, 5, 6, 7, 8, 9, 0], $sumFunction, null, 45],
             'Sum function with No Elements' => [[], $sumFunction, null, null],
             'Sum function with Initial Value' => [[1, 2, 3, 4], $sumFunction, 10, 20],
-            'Concat String function with Initial Value' => [['1', '2', '3', '4'], $concatFunction, '0', '0, 1, 2, 3, 4']
+            'Concat String function with No Initial Value' => [['1', '2', '3', '4'], $concatFunction, null, '1, 2, 3, 4'],
+            'Concat String function with Initial Value' => [['1', '2', '3', '4'], $concatFunction, '0', '0, 1, 2, 3, 4'],
+            'Product Function with Two Elements' => [[1, 2], $productFunction, null, 2],
+            'Product Function with More than Two Elements' => [[1, 2, 3, 4, 5], $productFunction, null, 120],
+            'Product Function with Initial Value' => [[1, 2, 3, 4, 5], $productFunction, 2, 240],
+            'Set Function With No Initial Value' => [[[1, 2], [3, [4, 5]]], $setFunction, null, [1, 2, 3, 4, 5]],
+            'Set Function With  Initial Value' => [[[1, 2], [3, [4, 5]]], $setFunction, [10, 15], [10, 15, 1, 2, 3, 4, 5]]
         ];
     }
 
@@ -59,6 +74,10 @@ class TestReduceAndFoldLeft extends TestCase
      */
     public function testReduceBehavesTheSameAsArray_Reduce(array $set, callable $combineFunction, $initialValue)
     {
+        //array_reduce doesn't resort to a foldLeft1 algorithm when no initial value is provided, so do it manually before running
+        if (!isset($initialValue)) {
+            $initialValue = array_shift($set);
+        }
         $this->assertEquals(array_reduce($set, $combineFunction, $initialValue), reduce($combineFunction, new ArrayIterator($set), $initialValue));
     }
 
