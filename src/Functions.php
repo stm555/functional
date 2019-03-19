@@ -3,6 +3,8 @@
 namespace stm555\functional\Functions;
 
 use ArrayIterator;
+use Iterator;
+use IteratorIterator;
 use ReflectionException;
 use ReflectionFunction;
 use ReflectionObject;
@@ -20,16 +22,23 @@ use Traversable;
  */
 function foldRight(callable $foldFunction, Traversable $set, $initialValue = null)
 {
+    if (!$set instanceof Iterator) {
+        $set = new IteratorIterator($set);
+    }
     //when no initial value is provided, use the first element of the set as the initial value, ie foldr1 behavior
     if (!isset($initialValue)) {
-        $initialValue = current($set);
-        next($set);
+        $initialValue = $set->current();
+        $set->next();
     }
-    $result = ($firstElement = current($set))
-        ? call_user_func($foldFunction, $firstElement, $initialValue)
-        : $initialValue;
-    while ($element = next($set)) {
+    if ($set->key() === null) {
+        return $initialValue;
+    }
+    $result = call_user_func($foldFunction, $set->current(), $initialValue);
+    $set->next();
+    while ($set->key() !== null) {
+        $element = $set->current();
         $result = call_user_func($foldFunction, $element, $result);
+        $set->next();
     }
     return $result;
 }
@@ -89,6 +98,7 @@ function foldLeft(callable $foldFunction, Traversable $set, $initialValue = null
 function map(callable $transformFunction, Traversable $set): Traversable
 {
     foreach ($set as $key => $value) {
+        echo "\n mapped value";
         yield $key => call_user_func($transformFunction, $value);
     }
 }
@@ -104,6 +114,7 @@ function map(callable $transformFunction, Traversable $set): Traversable
 function filter(callable $filterFunction, Traversable $set): Traversable
 {
     foreach ($set as $key => $value) {
+        echo "\n filtered value";
         if (call_user_func($filterFunction, $value)) {
             yield $key => $value;
         }
@@ -276,9 +287,10 @@ function callWithConformedArguments(callable $function, ...$arguments)
 /**
  * Will attempt to force all arguments supplied to the function to conform to the original functions definition
  * Because sometimes type safety is a pain in the ass?
+ * Note: generated callable may throw a ReflectionException
+ *
  * @param callable $function
  * @return callable
- * @todo unit tests
  *
  */
 function conformedArguments(callable $function)

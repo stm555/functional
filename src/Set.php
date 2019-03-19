@@ -42,8 +42,6 @@ class Set implements IteratorAggregate
     /**
      * @param callable $reduceFunction
      * @return mixed
-     * @todo implement reduce
-     *
      */
     public function reduce(callable $reduceFunction, $initialValue = null)
     {
