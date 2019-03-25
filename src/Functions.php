@@ -98,7 +98,6 @@ function foldLeft(callable $foldFunction, Traversable $set, $initialValue = null
 function map(callable $transformFunction, Traversable $set): Traversable
 {
     foreach ($set as $key => $value) {
-        echo "\n mapped value";
         yield $key => call_user_func($transformFunction, $value);
     }
 }
@@ -114,7 +113,6 @@ function map(callable $transformFunction, Traversable $set): Traversable
 function filter(callable $filterFunction, Traversable $set): Traversable
 {
     foreach ($set as $key => $value) {
-        echo "\n filtered value";
         if (call_user_func($filterFunction, $value)) {
             yield $key => $value;
         }
